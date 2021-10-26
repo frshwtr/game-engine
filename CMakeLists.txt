@@ -3,4 +3,6 @@ project(game_engine)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(game_engine main.cpp)
+add_executable(game_engine main.cpp libs.h)
+target_include_directories(game_engine PRIVATE /usr/include/GLFW /usr/include/GL /usr/include/glm /usr/include/SOIL2)
+target_link_libraries(game_engine -lglfw -lGLEW -lGL /usr/lib/soil2/libsoil2.so)
