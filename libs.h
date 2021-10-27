@@ -4,7 +4,13 @@
 
 #ifndef GAME_ENGINE_LIBS_H
 #define GAME_ENGINE_LIBS_H
+
 #include <iostream>
+
+#include <fstream>
+#include <string>
+#include <vector>
+
 #include <glew.h>
 #include <glfw3.h>
 
@@ -17,4 +23,5 @@
 #include <gtc/type_ptr.hpp>
 
 #include <SOIL2.h>
+
 #endif //GAME_ENGINE_LIBS_H
