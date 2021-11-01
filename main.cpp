@@ -57,7 +57,6 @@ int main() {
 
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-
     GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game Engine", NULL, NULL);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
@@ -100,11 +99,9 @@ int main() {
 
     std::cout << "Done!" << std::endl;
 
-
     std::cout << "Linking program... ";
     glLinkProgram(core_program);
     glGetProgramiv(core_program, GL_LINK_STATUS, &success);
-
 
     if (!success) {
         glGetProgramInfoLog(core_program, 512, NULL, infoLog);

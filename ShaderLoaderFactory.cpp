@@ -36,7 +36,6 @@ void ShaderLoaderFactory::createShaderLoader(const char *shaderSource) {
     std::string source = shaderSource;
     std::string extension = source.substr(source.find_last_of(extensionDelimeter) + 1, source.length());
 
-
     if (extension == extensionFrag) {
         FragmentShaderLoader(m_program).load(shaderSource);
     } else if (extension == extensionVert) {
