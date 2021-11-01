@@ -1,6 +1,5 @@
 #include "libs.h"
-#include "VertexShaderLoader.h"
-#include "FragmentShaderLoader.h"
+#include "ShaderLoaderFactory.h"
 
 Vertex vertices[] = {
         glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
@@ -35,53 +34,6 @@ void updateInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
-}
-
-bool loadFragmentShaders(GLuint &program, const char *shaderLocation) {
-    char infoLog[512];
-    GLint success;
-
-    std::string buffer;
-    std::string src;
-
-    std::ifstream in_file;
-
-    std::cout << "Fragment shaders.. ";
-    in_file.open(shaderLocation);
-    if (in_file.is_open()) {
-        while (std::getline(in_file, buffer)) {
-            src += buffer + "\n";
-        }
-    } else {
-        std::cout << std::endl << "ERROR: Could not load shaders " << shaderLocation << std::endl;
-        in_file.close();
-        return false;
-    }
-
-    in_file.close();
-
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    const GLchar *fragmentSrc = src.c_str();
-    glShaderSource(fragmentShader, 1, &fragmentSrc, NULL);
-    glCompileShader(fragmentShader);
-
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << std::endl << "ERROR: Could not compile fragment shader" << std::endl;
-        std::cout << infoLog << std::endl;
-        return success;
-    }
-
-    buffer = "";
-    src = "";
-
-    glAttachShader(program, fragmentShader);
-    glDeleteShader(fragmentShader);
-
-    return success;
 }
 
 void runFrame() {
@@ -134,25 +86,18 @@ int main() {
     GLuint core_program;
     char infoLog[512];
     GLint success;
-    std::cout << "Loading Shaders... ";
     core_program = glCreateProgram();
-    VertexShaderLoader vertexCore(core_program);
-    FragmentShaderLoader fragmentCore(core_program);
 
-    bool shaderLoadFailed = false;
+    ShaderLoaderFactory shaderLoader(core_program);
 
     try {
-        vertexCore.load("shaders/vertex/vertex_core.glsl");
-        fragmentCore.load("shaders/fragment/fragment_core.glsl");
+        shaderLoader.loadShaders({"shaders/vertex/vertex_core.glsl", "shaders/fragment/fragment_core.glsl"});
     } catch (std::exception _e) {
-        shaderLoadFailed = true;
-    }
-
-    if (shaderLoadFailed) {
+        std::cout << "Error whilst loading core shaders..";
         glfwTerminate();
         return 1;
-    };
-
+    }
+    
     std::cout << "Done!" << std::endl;
 
 
