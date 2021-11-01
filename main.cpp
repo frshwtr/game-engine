@@ -1,5 +1,6 @@
 #include "libs.h"
 #include "VertexShaderLoader.h"
+#include "FragmentShaderLoader.h"
 
 Vertex vertices[] = {
         glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
@@ -135,18 +136,19 @@ int main() {
     GLint success;
     std::cout << "Loading Shaders... ";
     core_program = glCreateProgram();
-    VertexShaderLoader core(core_program);
+    VertexShaderLoader vertexCore(core_program);
+    FragmentShaderLoader fragmentCore(core_program);
 
-    bool vertexLoadFailed = false;
+    bool shaderLoadFailed = false;
 
     try {
-        core.load("shaders/vertex/vertex_core.glsl");
+        vertexCore.load("shaders/vertex/vertex_core.glsl");
+        fragmentCore.load("shaders/fragment/fragment_core.glsl");
     } catch (std::exception _e) {
-        vertexLoadFailed = true;
+        shaderLoadFailed = true;
     }
 
-    if (vertexLoadFailed ||
-        !loadFragmentShaders(core_program, "shaders/fragment/fragment_core.glsl")) {
+    if (shaderLoadFailed) {
         glfwTerminate();
         return 1;
     };
