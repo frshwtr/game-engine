@@ -16,14 +16,13 @@ protected:
 
         std::ifstream in_file;
 
-        std::cout << "Vertex shaders.. ";
         in_file.open(location);
         if (in_file.is_open()) {
             while (std::getline(in_file, buffer)) {
                 src += buffer + "\n";
             }
         } else {
-            std::cout << std::endl << "ERROR: Could not load shader " << location << std::endl;
+            std::cout << std::endl << "ERROR: Could not from source " << location << std::endl;
             in_file.close();
             throw;
         }
