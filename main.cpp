@@ -91,13 +91,13 @@ int main() {
     ShaderLoaderFactory shaderLoader(core_program);
 
     try {
-        shaderLoader.loadShaders({"shaders/vertex/vertex_core.glsl", "shaders/fragment/fragment_core.glsl"});
+        shaderLoader.loadShaders({"shaders/vertex/vertex_core.vert", "shaders/fragment/fragment_core.frag"});
     } catch (std::exception _e) {
         std::cout << "Error whilst loading core shaders..";
         glfwTerminate();
         return 1;
     }
-    
+
     std::cout << "Done!" << std::endl;
 
 
