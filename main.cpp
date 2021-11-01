@@ -1,4 +1,5 @@
 #include "libs.h"
+#include "VertexShaderLoader.h"
 
 Vertex vertices[] = {
         glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
@@ -33,53 +34,6 @@ void updateInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
-}
-
-bool loadVertexShaders(GLuint &program, const char *shaderLocation) {
-    char infoLog[512];
-    GLint success;
-
-    std::string buffer;
-    std::string src;
-
-    std::ifstream in_file;
-
-    std::cout << "Vertex shaders.. ";
-    in_file.open(shaderLocation);
-    if (in_file.is_open()) {
-        while (std::getline(in_file, buffer)) {
-            src += buffer + "\n";
-        }
-    } else {
-        std::cout << std::endl << "ERROR: Could not load shaders" << shaderLocation << std::endl;
-        in_file.close();
-        return false;
-    }
-
-    in_file.close();
-
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    const GLchar *vertexSrc = src.c_str();
-    glShaderSource(vertexShader, 1, &vertexSrc, NULL);
-    glCompileShader(vertexShader);
-
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << std::endl << "ERROR: Could not compile vertex shader" << std::endl;
-        std::cout << infoLog << std::endl;
-        return success;
-    }
-
-    buffer = "";
-    src = "";
-
-
-    glAttachShader(program, vertexShader);
-    glDeleteShader(vertexShader);
-
-    return success;
 }
 
 bool loadFragmentShaders(GLuint &program, const char *shaderLocation) {
@@ -181,8 +135,17 @@ int main() {
     GLint success;
     std::cout << "Loading Shaders... ";
     core_program = glCreateProgram();
+    VertexShaderLoader core(core_program);
 
-    if (!loadVertexShaders(core_program, "shaders/vertex/vertex_core.glsl") ||
+    bool vertexLoadFailed = false;
+
+    try {
+        core.load("shaders/vertex/vertex_core.glsl");
+    } catch (std::exception _e) {
+        vertexLoadFailed = true;
+    }
+
+    if (vertexLoadFailed ||
         !loadFragmentShaders(core_program, "shaders/fragment/fragment_core.glsl")) {
         glfwTerminate();
         return 1;
@@ -264,9 +227,4 @@ int main() {
 
     glfwTerminate();
     return 0;
-}
-
-
-void initialiseBuffers(GLuint &vao, GLuint &vbo, GLuint &ebo) {
-
 }
