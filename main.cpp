@@ -1,14 +1,17 @@
 #include "libs.h"
 
 Vertex vertices[] = {
-        glm::vec3(0.f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
+        glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
         glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(0.f, 0.f),
-        glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f)
+        glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f),
+
+        glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(1.f, 1.f, 0.f), glm::vec2(0.f, 0.f)
 };
 
 
-unsigned verticesSizeof(Vertex vertices[]) {
-    return sizeof(vertices) / sizeof(Vertex);
+//TODO: make this work, doesn't like the input for some reason
+unsigned verticesSizeof(Vertex verticesArr[]) {
+    return sizeof(verticesArr) / sizeof(Vertex);
 }
 
 GLuint indices[] = {
@@ -16,11 +19,9 @@ GLuint indices[] = {
         0, 2, 3
 };
 
-unsigned indicesSizeof(GLuint indices[]) {
-    return sizeof(vertices) / sizeof(GLuint);
+unsigned indicesSizeof(GLuint indicesArr[]) {
+    return sizeof(indicesArr) / sizeof(GLuint);
 }
-
-unsigned verticesCountStatic = verticesSizeof(vertices);
 
 void initialiseBuffers(GLuint &vao, GLuint &vbo, GLuint &ebo);
 
@@ -135,6 +136,8 @@ void runFrame() {
 int main() {
     glfwInit();
 
+    unsigned verticesCountStatic = sizeof(vertices) / sizeof(Vertex);
+
     const int WINDOW_WIDTH = 640;
     const int WINDOW_HEIGHT = 480;
     int frameBufferWidth = 0;
@@ -206,23 +209,23 @@ int main() {
     GLuint vao;
     GLuint vbo;
     GLuint ebo;
-    std::cout << "Loading Buffers... " << std::endl;
+    std::cout << "Loading Buffers... ";
 
-    std::cout << "Vertex Buffers... " << std::endl;;
+    std::cout << "Vertex Buffers... ";
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    std::cout << "Vertex Arrays... " << std::endl;;
+    std::cout << "Vertex Arrays... ";
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    std::cout << "Element Buffers... " << std::endl;;
+    std::cout << "Element Buffers... ";
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    std::cout << "Attribute Pointers... " << std::endl;;
+    std::cout << "Attribute Pointers... ";
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
@@ -236,6 +239,10 @@ int main() {
 
     glUseProgram(0);
 
+    std::cout << "Done!" << std::endl;
+
+    std::cout << "Ready to render!" << std::endl;
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         updateInput(window);
@@ -245,7 +252,8 @@ int main() {
         glUseProgram(core_program);
 
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        unsigned int indicesCount = sizeof(indices) / sizeof(GLuint);
+        glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
         runFrame();
 
         glfwSwapBuffers(window);
