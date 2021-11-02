@@ -2,6 +2,7 @@
 #include "ShaderLoaderFactory.h"
 #include "runFrame.h"
 #include "renderLoop.h"
+#include "glRules.h"
 
 Vertex vertices[] = {
         glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
@@ -42,12 +43,8 @@ int main() {
     int frameBufferWidth = 0;
     int frameBufferHeight = 0;
 
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    enableGLRules();
 
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game Engine", NULL, NULL);
 
@@ -63,16 +60,6 @@ int main() {
         return 1;
     }
 
-    glEnable(GL_DEPTH_TEST);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     GLuint core_program;
     char infoLog[512];
