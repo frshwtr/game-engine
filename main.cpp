@@ -1,6 +1,7 @@
 #include "libs.h"
 #include "ShaderLoaderFactory.h"
 #include "runFrame.h"
+#include "renderLoop.h"
 
 Vertex vertices[] = {
         glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
@@ -27,16 +28,8 @@ unsigned indicesSizeof(GLuint indicesArr[]) {
 
 void initialiseBuffers(GLuint &vao, GLuint &vbo, GLuint &ebo);
 
-void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao);
-
 void framebuffer_resize_callback(GLFWwindow *window, int frameBufferWidth, int frameBufferHeight) {
     glViewport(0, 0, frameBufferWidth, frameBufferHeight);
-}
-
-void updateInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
 }
 
 int main() {
@@ -149,29 +142,10 @@ int main() {
 
     std::cout << "Ready to render!" << std::endl;
 
-    renderLoop(window, core_program, vao);
+    unsigned int indicesCount = sizeof(indices) / sizeof(GLuint);
+    renderLoop(window, core_program, vao, indicesCount);
 
     glfwTerminate();
     return 0;
 }
 
-void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao) {
-    while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
-        updateInput(window);
-        glClearColor(0.f, 0.f, 0.f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-        glUseProgram(core_program);
-
-        glBindVertexArray(vao);
-        unsigned int indicesCount = sizeof(indices) / sizeof(GLuint);
-        glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
-        runFrame();
-
-        glfwSwapBuffers(window);
-        glFlush();
-        glBindVertexArray(0);
-        glUseProgram(0);
-    }
-}
