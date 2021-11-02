@@ -1,5 +1,6 @@
 #include "libs.h"
 #include "ShaderLoaderFactory.h"
+#include "runFrame.h"
 
 Vertex vertices[] = {
         glm::vec3(-0.5f, 0.5f, 0.f), glm::vec3(1.f, 0.f, 0.f), glm::vec2(0.f, 1.f),
@@ -26,6 +27,8 @@ unsigned indicesSizeof(GLuint indicesArr[]) {
 
 void initialiseBuffers(GLuint &vao, GLuint &vbo, GLuint &ebo);
 
+void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao);
+
 void framebuffer_resize_callback(GLFWwindow *window, int frameBufferWidth, int frameBufferHeight) {
     glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 }
@@ -34,10 +37,6 @@ void updateInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
-}
-
-void runFrame() {
-
 }
 
 int main() {
@@ -150,6 +149,13 @@ int main() {
 
     std::cout << "Ready to render!" << std::endl;
 
+    renderLoop(window, core_program, vao);
+
+    glfwTerminate();
+    return 0;
+}
+
+void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao) {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         updateInput(window);
@@ -168,7 +174,4 @@ int main() {
         glBindVertexArray(0);
         glUseProgram(0);
     }
-
-    glfwTerminate();
-    return 0;
 }
