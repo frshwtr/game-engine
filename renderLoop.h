@@ -5,7 +5,7 @@
 #ifndef GAME_ENGINE_RENDERLOOP_H
 #define GAME_ENGINE_RENDERLOOP_H
 
-void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount);
+void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint &texture);
 
 void updateInput(GLFWwindow *window);
 

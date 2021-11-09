@@ -6,7 +6,7 @@
 #include "runFrame.h"
 #include "renderLoop.h"
 
-void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount) {
+void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint &texture) {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         updateInput(window);
@@ -14,6 +14,11 @@ void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned in
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         glUseProgram(core_program);
+
+        glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
 
         glBindVertexArray(vao);
 
@@ -24,6 +29,8 @@ void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned in
         glFlush();
         glBindVertexArray(0);
         glUseProgram(0);
+        glActiveTexture(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 }
 

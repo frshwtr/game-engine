@@ -14,7 +14,6 @@ void enableGLRules() {
 
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-
     glEnable(GL_DEPTH_TEST);
 
     glEnable(GL_CULL_FACE);

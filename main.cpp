@@ -9,7 +9,7 @@ Vertex vertices[] = {
         glm::vec3(-0.5f, -0.5f, 0.f), glm::vec3(0.f, 1.f, 0.f), glm::vec2(0.f, 0.f),
         glm::vec3(0.5f, -0.5f, 0.f), glm::vec3(0.f, 0.f, 1.f), glm::vec2(1.f, 0.f),
 
-        glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(1.f, 1.f, 0.f), glm::vec2(0.f, 0.f)
+        glm::vec3(0.5f, 0.5f, 0.f), glm::vec3(1.f, 1.f, 0.f), glm::vec2(1.f, 1.f)
 };
 
 
@@ -129,8 +129,35 @@ int main() {
 
     std::cout << "Ready to render!" << std::endl;
 
+    int image_width = 0;
+    int image_height = 0;
+
+    unsigned char *image = SOIL_load_image("textures/ainsley.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
+
+    GLuint texture0;
+
+    glGenTextures(1, &texture0);
+    glBindTexture(GL_TEXTURE_2D, texture0);
+
+    if (image) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    } else {
+        std::cout << "ERROR: could not load image" << std::endl;
+        return 1;
+    }
+
+    glActiveTexture(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    SOIL_free_image_data(image);
+
     unsigned int indicesCount = sizeof(indices) / sizeof(GLuint);
-    renderLoop(window, core_program, vao, indicesCount);
+    renderLoop(window, core_program, vao, indicesCount, texture0);
 
     glfwTerminate();
     return 0;
