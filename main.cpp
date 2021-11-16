@@ -156,8 +156,37 @@ int main() {
     glBindTexture(GL_TEXTURE_2D, 0);
     SOIL_free_image_data(image);
 
+    int image_width1 = 0;
+    int image_height1 = 0;
+
+    unsigned char *image1 = SOIL_load_image("textures/gordon.png", &image_width1, &image_height1, NULL,
+                                            SOIL_LOAD_RGBA);
+
+    GLuint texture1;
+
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    if (image1) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width1, image_height1, 0, GL_RGBA, GL_UNSIGNED_BYTE, image1);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    } else {
+        std::cout << "ERROR: could not load image" << std::endl;
+        return 1;
+    }
+
+    glActiveTexture(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    SOIL_free_image_data(image1);
+
+
     unsigned int indicesCount = sizeof(indices) / sizeof(GLuint);
-    renderLoop(window, core_program, vao, indicesCount, texture0);
+    renderLoop(window, core_program, vao, indicesCount, texture0, texture1);
 
     glfwTerminate();
     return 0;

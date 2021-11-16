@@ -7,7 +7,8 @@ in vec2 vs_textcoord;
 out vec4 fs_color;
 
 uniform sampler2D texture0;
+uniform sampler2D texture1;
 
 void main() {
-    fs_color = texture(texture0, vs_textcoord);
+    fs_color = texture(texture0, vs_textcoord) * texture(texture1, vs_textcoord);
 }

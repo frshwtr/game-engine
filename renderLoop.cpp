@@ -6,7 +6,8 @@
 #include "runFrame.h"
 #include "renderLoop.h"
 
-void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint &texture) {
+void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint texture0,
+                GLuint texture1) {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         updateInput(window);
@@ -16,9 +17,12 @@ void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned in
         glUseProgram(core_program);
 
         glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
+        glUniform1i(glGetUniformLocation(core_program, "texture1"), 1);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, texture0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture1);
 
         glBindVertexArray(vao);
 
