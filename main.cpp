@@ -184,9 +184,19 @@ int main() {
     glBindTexture(GL_TEXTURE_2D, 0);
     SOIL_free_image_data(image1);
 
+    glm::mat4 ModelMatrix(1.f);
+    ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.0f));
+    ModelMatrix = glm::rotate(ModelMatrix, glm::radians(50.f), glm::vec3(1.0f, 0.f, 0.f));
+    ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+    ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+
+    glUseProgram(core_program);
+    glUniformMatrix4fv(glGetUniformLocation(core_program, "model_matrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+    glUseProgram(0);
+    ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
 
     unsigned int indicesCount = sizeof(indices) / sizeof(GLuint);
-    renderLoop(window, core_program, vao, indicesCount, texture0, texture1);
+    renderLoop(window, core_program, vao, indicesCount, texture0, texture1, ModelMatrix);
 
     glfwTerminate();
     return 0;

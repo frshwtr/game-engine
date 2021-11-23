@@ -7,7 +7,7 @@
 #include "renderLoop.h"
 
 void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint texture0,
-                GLuint texture1) {
+                GLuint texture1, glm::mat4 &modelMatrix) {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         updateInput(window);
@@ -18,6 +18,16 @@ void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned in
 
         glUniform1i(glGetUniformLocation(core_program, "texture0"), 0);
         glUniform1i(glGetUniformLocation(core_program, "texture1"), 1);
+
+
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f));
+        modelMatrix = glm::rotate(modelMatrix, glm::radians(0.f), glm::vec3(1.0f, 0.f, 0.f));
+        modelMatrix = glm::rotate(modelMatrix, glm::radians(10.f), glm::vec3(0.f, 1.f, 0.f));
+        modelMatrix = glm::rotate(modelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+
+
+        glUniformMatrix4fv(glGetUniformLocation(core_program, "model_matrix"), 1, GL_FALSE,
+                           glm::value_ptr(modelMatrix));
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture0);
