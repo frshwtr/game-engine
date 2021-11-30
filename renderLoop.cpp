@@ -7,7 +7,9 @@
 #include "renderLoop.h"
 
 void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint texture0,
-                GLuint texture1, glm::mat4 &modelMatrix) {
+                GLuint texture1, glm::mat4 &modelMatrix, glm::mat4 &projectionMatrix, int &frameBufferWidth,
+                int &frameBufferHeight) {
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         updateInput(window);
@@ -25,9 +27,22 @@ void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned in
         modelMatrix = glm::rotate(modelMatrix, glm::radians(10.f), glm::vec3(0.f, 1.f, 0.f));
         modelMatrix = glm::rotate(modelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
 
-
         glUniformMatrix4fv(glGetUniformLocation(core_program, "model_matrix"), 1, GL_FALSE,
                            glm::value_ptr(modelMatrix));
+
+        float fov = 90.f;
+        float nearPlane = 0.1f;
+        float farPlane = 1000.f;
+
+        glfwGetFramebufferSize(window,
+                               &frameBufferWidth, &frameBufferHeight);
+
+        projectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(frameBufferWidth) /
+                                                               frameBufferHeight, nearPlane,
+                                            farPlane);
+        glUniformMatrix4fv(glGetUniformLocation(core_program, "projection_matrix"), 1, GL_FALSE,
+                           glm::value_ptr(projectionMatrix));
+
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture0);

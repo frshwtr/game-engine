@@ -6,7 +6,8 @@
 #define GAME_ENGINE_RENDERLOOP_H
 
 void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned int indicesCount, GLuint texture0,
-                GLuint texture1, glm::mat4 &modelMatrix);
+                GLuint texture1, glm::mat4 &modelMatrix, glm::mat4 &projectionMatrix, int &frameBufferWidth,
+                int &frameBufferHeight);
 
 void updateInput(GLFWwindow *window);
 
