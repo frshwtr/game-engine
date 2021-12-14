@@ -9,7 +9,7 @@ void renderLoop(GLFWwindow *window, GLuint core_program, GLuint vao, unsigned in
                 GLuint texture1, glm::mat4 &modelMatrix, glm::mat4 &projectionMatrix, int &frameBufferWidth,
                 int &frameBufferHeight);
 
-void updateInput(GLFWwindow *window);
+void updateInput(GLFWwindow *window, glm::vec3 &position, glm::vec3 &rotation);
 
 
 #endif //GAME_ENGINE_RENDERLOOP_H
